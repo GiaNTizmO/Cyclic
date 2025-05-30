@@ -74,7 +74,15 @@ public class BlockSimpleHopper extends BlockBase {
 
   public static VoxelShape getShapeHopper(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
     try {
-      return Blocks.HOPPER.getShape(state, worldIn, pos, context);
+      // TODO: Gamania code start:
+      // Блок не имеет нужного свойства — выходим
+      if (!state.hasProperty(BlockStateProperties.FACING)) {
+        return VoxelShapes.fullCube();
+      }
+      // return Blocks.HOPPER.getShape(state, worldIn, pos, context);
+      // NOTE: Нужно проверить что стейт с фейсингом и направлением корректны, но сейчас хватит костыля.
+      return Blocks.HOPPER.getShape(state.with(BlockStateProperties.FACING, Direction.DOWN), worldIn, pos, context);
+      // TODO: Gamania code end.
     }
     catch (Exception e) {
       ModCyclic.LOGGER.error("An unknown has broken the vanilla hopper, causing compatibility issues", e);
